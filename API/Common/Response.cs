@@ -2,7 +2,8 @@ using System;
 
 namespace API.Common;
 
-public class Response<T>
+// made a common class for the register end point
+public class Response<T> //this is a generic class. It is useful because it can be reused as in same class can be used as multiple data type.
 {
     public bool IsSuccess { get; }
     public T Data { get; }

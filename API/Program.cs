@@ -2,6 +2,7 @@ using System.Text;
 using API.Data;
 using API.Endpoints;
 using API.Models;
+using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,9 @@ builder.Services.AddIdentityCore<AppUser>()
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
+
 //configuring the authentication 
-builder.Services.AddAuthentication(opt => 
+builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,7 +39,11 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddScoped<TokenService>();
+
+
 builder.Services.AddAuthorization();
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -53,6 +59,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication(); //using the above authentication here
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapAccountEndpoint();
 

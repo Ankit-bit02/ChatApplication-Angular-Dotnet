@@ -1,6 +1,8 @@
-using System;
 using API.Common;
+using API.DTOs;
 using API.Models;
+using API.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +14,8 @@ public static class AccountEndpoint
     {
         var group = app.MapGroup("/api/account").WithTags("account");
 
-        group.MapPost("/register", async (HttpContext context, UserManager<AppUser> userManager, [FromForm] string fullName, [FromForm] string email, [FromForm] string password, [FromForm] string userName) =>
+        // POST api for User Registration
+        group.MapPost("/register", async (HttpContext context, UserManager<AppUser> userManager, [FromForm] string fullName, [FromForm] string email, [FromForm] string password, [FromForm] string userName, [FromForm] IFormFile? profileImage) =>
         {
             var userFromDb = await userManager.FindByEmailAsync(email);
 
@@ -21,11 +24,21 @@ public static class AccountEndpoint
                 return Results.BadRequest(Response<string>.Failure("User already exists."));
             }
 
+            if (profileImage == null)
+            {
+                return Results.BadRequest(Response<string>.Failure("Profile image is required."));
+            }
+
+            var picture = await FileUpload.Upload(profileImage);
+
+            picture = $"{context.Request.Scheme}://{context.Request.Host}/uploads/{picture}";
+
             var user = new AppUser
             {
                 Email = email,
                 FullName = fullName,
-                UserName = userName
+                UserName = userName,
+                ProfileIMage = picture
             };
 
             var result = await userManager.CreateAsync(user, password);
@@ -36,6 +49,32 @@ public static class AccountEndpoint
             }
             return Results.Ok(Response<string>.Success("", "User created successfully."));
 
+        }).DisableAntiforgery();
+
+        group.MapPost("/login", async (UserManager<AppUser> UserManager, TokenService tokenService, [FromForm] LoginDto dto) =>
+        {                               
+            if (dto == null)
+            {
+                return Results.BadRequest(Response<string>.Failure("Invalid login credentails."));
+            }
+
+            var user = await UserManager.FindByEmailAsync(dto.Email);
+
+            if (user == null)
+            {
+                return Results.BadRequest(Response<string>.Failure("User not found."));
+            }
+
+            var result = await UserManager.CheckPasswordAsync(user!, dto.Password);
+
+            if (!result)
+            {
+                return Results.BadRequest(Response<string>.Failure("Invalid Password"));
+            }
+
+            var token = tokenService.GenerateToken(user.Id, user.UserName!);
+
+            return Results.Ok(Response<string>.Success(token, "User logged in successfully"));   
         }).DisableAntiforgery();
 
         return group;

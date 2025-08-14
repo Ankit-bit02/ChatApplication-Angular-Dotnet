@@ -165,3 +165,5 @@ C:\Users\DhuniPc0\Desktop\CHAT\API\obj\Debug\net9.0\refint\API.dll
 C:\Users\DhuniPc0\Desktop\CHAT\API\obj\Debug\net9.0\API.pdb
 C:\Users\DhuniPc0\Desktop\CHAT\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 C:\Users\DhuniPc0\Desktop\CHAT\API\obj\Debug\net9.0\ref\API.dll
+C:\Users\DhuniPc0\Desktop\CHAT\API\obj\Debug\net9.0\API.sourcelink.json
+C:\Users\DhuniPc0\Desktop\CHAT\API\bin\Debug\net9.0\API.staticwebassets.runtime.json
