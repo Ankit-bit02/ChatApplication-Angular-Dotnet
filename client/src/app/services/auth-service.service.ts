@@ -1,0 +1,23 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { ApiResponse } from '../models/api-response';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthServiceService {
+  private baseUrl = 'http://localhost:5000/api/account';  // url from the launch setting json file and account endpoint
+
+  httpClient = inject(HttpClient); // injecting the httpclient
+
+  register(data: FormData): Observable<ApiResponse<string>>{
+    return this.httpClient
+    .post<ApiResponse<string>>(`${this.baseUrl}/register`, data)
+    .pipe(
+      tap((response) =>{
+        localStorage.setItem("token", response.data)
+      })
+    );
+  }
+}
