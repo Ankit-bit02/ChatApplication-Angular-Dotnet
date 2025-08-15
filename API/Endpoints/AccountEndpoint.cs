@@ -1,10 +1,12 @@
 using API.Common;
 using API.DTOs;
+using API.Extensions;
 using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints;
 
@@ -51,6 +53,7 @@ public static class AccountEndpoint
 
         }).DisableAntiforgery();
 
+        // POST api for User Login
         group.MapPost("/login", async (UserManager<AppUser> UserManager, TokenService tokenService, [FromForm] LoginDto dto) =>
         {                               
             if (dto == null)
@@ -76,6 +79,14 @@ public static class AccountEndpoint
 
             return Results.Ok(Response<string>.Success(token, "User logged in successfully"));   
         }).DisableAntiforgery();
+
+        // GET api for getting User Details
+        group.MapGet("/me", async (HttpContext context, UserManager<AppUser> userManager) =>
+        {
+            var currentLoggedInUserId = context.User.GetUserId()!;
+            var currentLoggedInUser = await userManager.Users.FirstOrDefaultAsync(x => x.Id == currentLoggedInUserId.ToString());
+            return Results.Ok(Response<AppUser>.Success(currentLoggedInUser!, "User details fetched successfully."));
+        }).RequireAuthorization();
 
         return group;
     }
