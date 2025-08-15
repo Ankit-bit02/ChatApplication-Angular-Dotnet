@@ -1,6 +1,7 @@
 using System.Text;
 using API.Data;
 using API.Endpoints;
+using API.Hubs;
 using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,7 +38,39 @@ builder.Services.AddAuthentication(opt =>
         ValidateIssuer = false,
         ValidateAudience = false
     };
+
+    //configuring jwt auth for signalR
+    option.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hus"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
+
+// Configuring CORS
+builder.Services.AddCors(
+    options =>
+    {
+        options.AddDefaultPolicy(builder =>
+        {
+            builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+    }
+);
+
 
 builder.Services.AddScoped<TokenService>();
 
@@ -47,6 +80,7 @@ builder.Services.AddAuthorization();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -56,10 +90,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 app.UseHttpsRedirection();
 app.UseAuthentication(); //using the above authentication here
 app.UseAuthorization();
 app.UseStaticFiles();
+app.MapHub<ChatHub>("hubs/chat");
 
 app.MapAccountEndpoint();
 
