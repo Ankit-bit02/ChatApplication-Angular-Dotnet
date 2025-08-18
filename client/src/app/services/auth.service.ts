@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ApiResponse } from '../models/api-response';
 import { User } from '../models/user';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -66,8 +67,16 @@ export class AuthService {
     return !!localStorage.getItem(this.token);
   }
 
+
+  // logout method
   logout(){
     localStorage.removeItem(this.token);
     localStorage.removeItem('user');
   }
+
+  // method to get current logged in user name 
+  get currentLoggedUser(): User | null{
+    const user: User = JSON.parse(localStorage.getItem('user') || '{}');
+    return user;
+  } 
 }
