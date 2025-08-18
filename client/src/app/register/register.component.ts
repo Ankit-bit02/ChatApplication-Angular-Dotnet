@@ -21,9 +21,25 @@ export class RegisterComponent {
   profileImage: File | null = null;
 
   authService = inject(AuthServiceService);
-  hide = signal(true);
+  hide = signal(true); // aslo used for the toggle password
 
-  togglePassword(event: MouseEvent){
+  togglePassword(event: MouseEvent){  //toggle password method for user registration
     this.hide.set(!this.hide)
+  }
+
+
+  onFileSelected(event: any){
+    const file:File = event.target.files[0];
+    if(file){
+    this.profileImage = file;
+
+    const reader = new FileReader();
+    reader.onload=(e) =>{
+      this.profilePicture = e.target!.result as string;
+      console.log(e.target?.result);
+    };
+    reader.readAsDataURL(file);
+    console.log(this.profilePicture);
+    }
   }
 }
