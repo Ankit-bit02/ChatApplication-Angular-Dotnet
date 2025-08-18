@@ -57,8 +57,12 @@ export class AuthService {
     );
   }
 
-  // re-usable methods to get the value of token
+  // re-usable method to get the value of token
   get getAccessToken(): string | null {
     return localStorage.getItem(this.token) || '';
+  }
+
+  isLoggedIn(): boolean{
+    return !!localStorage.getItem(this.token);
   }
 }
