@@ -21,6 +21,9 @@ export const routes: Routes = [
             import('./chat/chat.component').then((x) => x.ChatComponent),
         canActivate: [authGuard],
     },
+
+    // wild card implementation. Redirect the user to the chat page if undefined path is defined by the user
+    // It should always be used at the end of the page.
     {
         path: '**',
         redirectTo: 'chat',
