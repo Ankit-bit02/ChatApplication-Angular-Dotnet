@@ -9,7 +9,7 @@ import { ApiResponse } from '../models/api-response';
 export class AuthServiceService {
   private baseUrl = 'http://localhost:5000/api/account';  // url from the launch setting json file and account endpoint
 
-  httpClient = inject(HttpClient); // injecting the httpclient
+  private httpClient = inject(HttpClient); // injecting the httpclient
 
   register(data: FormData): Observable<ApiResponse<string>>{
     return this.httpClient
