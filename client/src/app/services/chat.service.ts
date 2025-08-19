@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../models/user';
 import { AuthService } from './auth.service';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
+import { Message } from '../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ export class ChatService {
   private authService = inject(AuthService);
   private hubUrl = 'http://localhost:5000/hubs/chat';
   onlineUsers = signal<User[]>([]); // to show all the users
-  currentOpenedChat = signal<User | null>({} as User); // for the user information of the chat opened
+  currentOpenedChat = signal<User | null>(null); // for the user information of the chat opened
+  chatMessages = signal<Message[]>([]);
+  isLoading = signal<boolean>(true);
 
 
   private hubConnection?: HubConnection;
@@ -40,6 +43,11 @@ export class ChatService {
             (u) => u.userName !== this.authService.currentLoggedUser?.userName)
           ); 
       });
+
+      this,this.hubConnection!.on("ReceiveMessageList",(message) => {
+        this.chatMessages.update(messages=>[...message,...messages])
+        this.isLoading.update(()=>false)
+      })
     }
 
     disConnectConnection(){
@@ -47,4 +55,33 @@ export class ChatService {
         this.hubConnection.stop().catch((error) => console.log(error));
       }
     }
+    status(userName: string): string {
+      const currentChatUser = this.currentOpenedChat();
+      if(!currentChatUser){
+        return 'Offline';
+      }
+
+      const onlineUser = this.onlineUsers().find(
+        (user) => user.userName === userName
+      );
+
+      return onlineUser?.isTyping ? 'Typing...' : this.isUserOnline();
+  }
+
+  isUserOnline(): string{
+    let onlineUser = this.onlineUsers().find(
+      (user) => user.userName === this.currentOpenedChat()?.userName
+    );
+
+    return onlineUser?.isOnline ? 'Online' : this.currentOpenedChat()!.userName;
+  }
+
+  loadMessages(pageNumber:number){
+    this.hubConnection?.invoke("LoadMessages", this.currentOpenedChat()?.id, pageNumber)
+    .then()
+    .catch()
+    .finally(() => {
+      this.isLoading.update(() => false);
+    });
+  }
 }
