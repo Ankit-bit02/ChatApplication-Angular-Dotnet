@@ -69,7 +69,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
         return users;
     }
 
-    public async Task SendMessgae(MessageRequestDto message)
+    public async Task SendMessage(MessageRequestDto message)
     {
         var senderId = Context.User!.Identity!.Name;
         var recipientId = message.ReceiverId;

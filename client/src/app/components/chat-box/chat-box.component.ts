@@ -9,8 +9,19 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-chat-box',
   imports: [MatProgressSpinner, DatePipe, MatIconModule],
   templateUrl: './chat-box.component.html',
-  styles: ``
+  styles: [`
+    .chat-box{
+      scroll-behavior:smooth;
+      overflow:hidden;
+      padding:10px,
+      background-color:#f5f5f5;
+      box-shadow:0 0 10px rgba(0,0,0,0.1);
+      height:70vh;
+      border-radius:5px;
+      overflow-y:scroll;
+    }`],
 })
+
 export class ChatBoxComponent {
   chatService = inject(ChatService);
   authService = inject(AuthService);

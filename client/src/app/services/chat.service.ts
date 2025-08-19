@@ -46,8 +46,13 @@ export class ChatService {
 
       this,this.hubConnection!.on("ReceiveMessageList",(message) => {
         this.chatMessages.update(messages=>[...message,...messages])
-        this.isLoading.update(()=>false)
-      })
+        this.isLoading.update(() => false)
+      });
+
+      this.hubConnection!.on('ReceiveNewMessage', (message: Message) => {
+        document.title = '(1) New Message';
+        this.chatMessages.update((messages) => [...messages, message]);
+      });
     }
 
     disConnectConnection(){
@@ -55,6 +60,32 @@ export class ChatService {
         this.hubConnection.stop().catch((error) => console.log(error));
       }
     }
+
+    sendMessage(message: string){
+      this.chatMessages.update((messages) => [
+        ...messages,
+        {
+          content: message,
+          senderId: this.authService.currentLoggedUser!.id,
+          receiverId: this.currentOpenedChat()?.id!,
+          createdDate: new Date().toString(),
+          isRead: false,
+          id: 0,
+        },
+      ]);
+
+      this.hubConnection?.invoke('SendMessage', {
+        receiverId: this.currentOpenedChat()?.id,
+        content: message,
+      })
+      .then((id) => {
+        console.log('message sent to', id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+    
     status(userName: string): string {
       const currentChatUser = this.currentOpenedChat();
       if(!currentChatUser){
@@ -84,4 +115,5 @@ export class ChatService {
       this.isLoading.update(() => false);
     });
   }
+  
 }
