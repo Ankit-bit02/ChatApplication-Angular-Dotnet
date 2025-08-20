@@ -26,7 +26,6 @@ export class ChatService {
     .withAutomaticReconnect()
     .build();
 
-
     this.hubConnection
       .start()
       .then(() => {
@@ -34,6 +33,17 @@ export class ChatService {
       })
       .catch((error) => {
         console.log('Connection or login error', error);
+      });
+
+      this.hubConnection!.on('Notify', (user:User) => {
+        Notification.requestPermission().then((result) => {
+          if(result == 'granted') {
+            new Notification('Active Now 🟢', {
+              body: user.fullName + ' is online now',
+              icon: user.profileIMage,
+            });
+          }
+        });
       });
       
       this.hubConnection!.on('OnlineUsers', (user:User[]) => {
