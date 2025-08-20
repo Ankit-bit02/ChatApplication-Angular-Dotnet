@@ -1,4 +1,4 @@
-@if(chatService.currentOpenedChat()){
+<!-- @if(chatService.currentOpenedChat()){
     <div class="relative w-full bg=[#dfeff1] h-full">
         <div class="chat-header flex-justify justify-between items-center border-b w-full bg-white p-4">
             <div>
@@ -28,7 +28,90 @@
     </div>
 }                   
 @else {
-    <div class="flex flex-col items-center justify-center p-4 md:h-full">
+    <div class="flex flex-col items-center justify-center p-4 h-full">
         <img src="chatopen.svg" />
     </div>
-}   
+}    -->
+
+
+<!-- chat-window.component.html -->
+@if(chatService.currentOpenedChat()) {
+  <div class="flex flex-col h-full bg-white">
+    <!-- Chat Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-white shadow-sm">
+      <div class="flex items-center space-x-3">
+        <img [src]="chatService.currentOpenedChat()?.profilePicture" 
+             class="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200"
+             alt="{{chatService.currentOpenedChat()?.fullName}} Profile">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900">
+            {{chatService.currentOpenedChat()?.fullName | titlecase}}
+          </h2>
+          <p class="text-sm text-gray-500">
+            {{chatService.status(chatService.currentOpenedChat()?.userName!)}}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <button class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+          <mat-icon class="text-xl">videocam</mat-icon>
+        </button>
+        <button class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+          <mat-icon class="text-xl">call</mat-icon>
+        </button>
+        <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
+          <mat-icon class="text-xl">more_vert</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Chat Messages Area -->
+    <div class="flex-1 bg-gray-50">
+      <app-chat-box />
+    </div>
+    
+    <!-- Message Input -->
+    <div class="p-4 bg-white border-t border-gray-200">
+      <div class="flex items-center space-x-3">
+        <div class="flex-1 relative">
+          <input type="text" 
+                 (input)="chatService.notifyTyping()" 
+                 (keydown.enter)="sendMessage()" 
+                 [(ngModel)]="message" 
+                 class="w-full bg-gray-100 border border-gray-200 rounded-full px-4 py-3 pr-12 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                 placeholder="Type a message..." />
+          
+          <!-- Emoji/Attachment buttons -->
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+            <button class="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors">
+              <mat-icon class="text-lg">sentiment_satisfied_alt</mat-icon>
+            </button>
+            <button class="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors">
+              <mat-icon class="text-lg">attach_file</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Send Button -->
+        <button (click)="sendMessage()" 
+                class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95"
+                [disabled]="!message">
+          <mat-icon class="text-lg">send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- No Chat Selected State -->
+  <div class="flex flex-col items-center justify-center h-full bg-gray-50 text-center p-8">
+    <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-6">
+      <mat-icon class="text-4xl text-gray-400">chat_bubble_outline</mat-icon>
+    </div>
+    <h2 class="text-xl font-semibold text-gray-900 mb-2">Welcome to Chat</h2>
+    <p class="text-gray-500 max-w-sm">
+      Select a conversation from the sidebar to start chatting with your friends and colleagues.
+    </p>
+  </div>
+}

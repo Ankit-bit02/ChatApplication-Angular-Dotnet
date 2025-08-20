@@ -25,24 +25,24 @@
     </div>
     <div class="relative flex mt-4 items-center gap-2 justify-between">
         <input placeholder="Search" type="text"
-            class="bg-slate-100 border-1 focus:ring-1 focus:ring-slate-100 focus:outlineenone w-100 mb-3 border-slate-50 p-1 pl-10 text-slate-500 font-normal px-3 rounded-md" />
+            class="bg-slate-100 border-1 focus:ring-1 focus:ring-slate-100 focus:outlineenone w-100 mb-3 border-slate-50 p-1 pl-10 text-slate-500 font-normal px-3 rounded" />
         <mat-icon class="absolute text-gray-400 left-2 top-1 pr-3">
             search
         </mat-icon>
     </div>
-    <div class="py-1 flex md:block overflow-y-auto scroll-smooth">
+    <div class="py-1 flex block overflow-y-auto scroll-smooth">
         @for (user of chatService.onlineUsers(); track user){
         <div (click)="openChatWindow(user)"
-            class="flex flex-col md:flex-row items-center border-b bg-white hover:bg-slate-200 cursor-pointer hover:rounded-md border-gray-100 px-3 gap-2 py-2">
+            class="flex flex-col flex-row items-center border-b bg-white hover:bg-slate-200 cursor-pointer hover:rounded border-gray-100 px-3 gap-2 py-2">
             <div class="w-12 h-12 rounded-full object-cover overflow-hidden">
                 <img [src]="user.profilePicture" class="w-full h-full object-cover" alt="Profile Image">
             </div>
             @if(user.isOnline){
-            <div class="ml-auto md:hidden absolute right-0 font-medium text-xs">
+            <div class="ml-auto hidden absolute right-0 font-medium text-xs">
                 <div class="bg-green-700 w-3 h-3 rounded-full"></div>
             </div>
             }@else {
-            <div class="bg-green-100 w-3 h-3 md:hidden absolute right-0 rounded-full"></div>
+            <div class="bg-green-100 w-3 h-3 hidden absolute right-0 rounded-full"></div>
             }
             <div>
                 <span class="text-base text-gray-600 font-normal">
@@ -56,11 +56,11 @@
                 }
             </div>
             @if(user.isOnline){
-            <div class="ml-auto font-medium hidden md:block text-xs">
+            <div class="ml-auto font-medium hidden block text-xs">
                 <div class="bg-green-700 w-2 h-2 rounded-full"></div>
             </div>
             }@else {
-            <div class="bg-green-100 w-2 h-2 hidden md:block rounded-full"></div>
+            <div class="bg-green-100 w-2 h-2 hidden block rounded-full"></div>
 
             }
         </div>

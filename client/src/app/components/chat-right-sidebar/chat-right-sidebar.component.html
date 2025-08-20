@@ -1,4 +1,4 @@
-@if(chatService.currentOpenedChat()){
+<!-- @if(chatService.currentOpenedChat()){
     <div class="p-3">
     <div class="flex flex-col text-center items-center mt-3">
         <img class="rounded-full mb-4 w-44 h-44 object-cover" [src]="chatService.currentOpenedChat()?.profilePicture" alt="Profile Picture" />
@@ -12,4 +12,150 @@
         </div>
     </div>
 </div>
+} -->
+
+
+
+
+<!-- chat-right-sidebar.component.html -->
+@if(chatService.currentOpenedChat()) {
+  <div class="flex flex-col h-full bg-white">
+    
+    <!-- Profile Section -->
+    <div class="flex flex-col items-center p-6 border-b border-gray-200 bg-gradient-to-b from-blue-50 to-white">
+      <div class="relative mb-4">
+        <img class="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg" 
+             [src]="chatService.currentOpenedChat()?.profilePicture" 
+             alt="{{chatService.currentOpenedChat()?.fullName}} Profile Picture" />
+        
+        @if(chatService.currentOpenedChat()?.isOnline) {
+          <div class="absolute bottom-1 right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white"></div>
+        } @else {
+          <div class="absolute bottom-1 right-1 w-6 h-6 bg-gray-400 rounded-full border-3 border-white"></div>
+        }
+      </div>
+      
+      <div class="text-center">
+        <h2 class="text-xl font-semibold text-gray-900 mb-1">
+          {{chatService.currentOpenedChat()?.fullName | titlecase}}
+        </h2>
+        <p class="text-sm text-gray-500 mb-2">
+          &#64;{{chatService.currentOpenedChat()?.userName}}
+        </p>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+              [class]="chatService.currentOpenedChat()?.isOnline ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+          @if(chatService.currentOpenedChat()?.isOnline) {
+            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+            Active now
+          } @else {
+            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+            Offline
+          }
+        </span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="p-4 border-b border-gray-200">
+      <div class="grid grid-cols-3 gap-3">
+        <button class="flex flex-col items-center justify-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group">
+          <mat-icon class="text-blue-600 group-hover:text-blue-700 mb-1">videocam</mat-icon>
+          <span class="text-xs text-blue-600 group-hover:text-blue-700 font-medium">Video</span>
+        </button>
+        <button class="flex flex-col items-center justify-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group">
+          <mat-icon class="text-green-600 group-hover:text-green-700 mb-1">call</mat-icon>
+          <span class="text-xs text-green-600 group-hover:text-green-700 font-medium">Call</span>
+        </button>
+        <button class="flex flex-col items-center justify-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group">
+          <mat-icon class="text-purple-600 group-hover:text-purple-700 mb-1">person</mat-icon>
+          <span class="text-xs text-purple-600 group-hover:text-purple-700 font-medium">Profile</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4">
+        <h3 class="text-sm font-semibold text-gray-900 mb-3">Contact Information</h3>
+        
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+            <div class="flex-shrink-0">
+              <mat-icon class="text-gray-400">email</mat-icon>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-gray-500 uppercase tracking-wide">Email</p>
+              <p class="text-sm text-gray-900 truncate">{{chatService.currentOpenedChat()?.userName}}&#64;example.com</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+            <div class="flex-shrink-0">
+              <mat-icon class="text-gray-400">person</mat-icon>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-gray-500 uppercase tracking-wide">Username</p>
+              <p class="text-sm text-gray-900 truncate">&#64;{{chatService.currentOpenedChat()?.userName}}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shared Media Section -->
+        <div class="mt-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Shared Media</h3>
+          <div class="grid grid-cols-3 gap-2">
+            @for(i of [1,2,3,4,5,6]; track i) {
+              <div class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
+                <mat-icon class="text-gray-400">image</mat-icon>
+              </div>
+            }
+          </div>
+          <button class="w-full mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium">
+            View all media
+          </button>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="mt-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Privacy & Support</h3>
+          <div class="space-y-2">
+            <button class="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+              <div class="flex items-center space-x-3">
+                <mat-icon class="text-gray-400">block</mat-icon>
+                <span class="text-sm text-gray-700">Block User</span>
+              </div>
+              <mat-icon class="text-gray-300">chevron_right</mat-icon>
+            </button>
+            
+            <button class="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+              <div class="flex items-center space-x-3">
+                <mat-icon class="text-gray-400">report</mat-icon>
+                <span class="text-sm text-gray-700">Report User</span>
+              </div>
+              <mat-icon class="text-gray-300">chevron_right</mat-icon>
+            </button>
+            
+            <button class="w-full flex items-center justify-between p-3 text-left hover:bg-red-50 rounded-lg transition-colors text-red-600">
+              <div class="flex items-center space-x-3">
+                <mat-icon class="text-red-500">delete</mat-icon>
+                <span class="text-sm">Delete Conversation</span>
+              </div>
+              <mat-icon class="text-red-300">chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- No Chat Selected -->
+  <div class="flex flex-col items-center justify-center h-full p-8 text-center">
+    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+      <mat-icon class="text-3xl text-gray-400">info</mat-icon>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Chat Details</h3>
+    <p class="text-sm text-gray-500 max-w-xs">
+      Select a conversation to view contact details and shared media.
+    </p>
+  </div>
 }
