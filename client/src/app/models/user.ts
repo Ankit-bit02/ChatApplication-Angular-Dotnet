@@ -1,5 +1,6 @@
 export interface User{
     id: string;
+    email: string;
     profilePicture: string;
     profileIMage: string;
     photoUrl: string;
@@ -10,4 +11,4 @@ export interface User{
     lastMessage: string;
     unreadCount: number;
     isTyping: boolean;
-}
+}   

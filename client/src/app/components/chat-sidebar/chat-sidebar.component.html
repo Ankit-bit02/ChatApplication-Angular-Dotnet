@@ -1,4 +1,4 @@
-<div class="p-4">
+<!-- <div class="p-4">
     <div class="flex items-center justify-between bg-white z-10 sticky top-0 p-1 w-full">
         <div class="flex items-center">
             <img class="h-10 w-10 rounded-full border-gray-100 border-2 object-cover"
@@ -66,4 +66,125 @@
         </div>
         }
     </div>
+</div> -->
+
+
+
+
+<div class="flex flex-col h-full">
+  <!-- Current User Header with Logout -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+    <div class="flex items-center space-x-3">
+      <div class="relative">
+        <img class="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover"
+             [src]="(authService.currentLoggedUser?.profilePicture || 'https://randomuser.me/api/portraits/lego/4.jpg')"
+             alt="Profile Picture">
+        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h2 class="text-sm font-semibold text-gray-900 truncate">
+          {{authService.currentLoggedUser?.fullName | titlecase}}
+        </h2>
+        <p class="text-xs text-gray-500 truncate">Online</p>
+      </div>
+    </div>
+    
+    <!-- Logout Button -->
+    <div class="relative">
+      <button mat-icon-button [matMenuTriggerFor]="menu" 
+              class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full p-2 transition-colors">
+        <mat-icon class="text-xl">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="mt-2">
+        <button (click)="logout(); $event.stopPropagation()" mat-menu-item 
+                class="flex items-center space-x-2 text-red-600 hover:bg-red-50">
+          <mat-icon class="text-red-600">logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="p-4 border-b border-gray-200 bg-white">
+    <div class="relative">
+      <input placeholder="Search conversations..." type="text"
+             class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 pl-10 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+      <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">
+        search
+      </mat-icon>
+    </div>
+  </div>
+
+  <!-- Users List -->
+  <div class="flex-1 overflow-y-auto">
+    <div class="p-2">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2 mb-2">
+        Conversations
+      </h3>
+      
+      @for (user of chatService.onlineUsers(); track user.id) {
+        <div (click)="openChatWindow(user)"
+             class="flex items-center space-x-3 p-3 mx-1 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-50 active:bg-gray-100"
+             [class.bg-blue-50]="chatService.currentOpenedChat()?.id === user.id"
+             [class.border-l-4]="chatService.currentOpenedChat()?.id === user.id"
+             [class.border-blue-500]="chatService.currentOpenedChat()?.id === user.id">
+          
+          <!-- Profile Picture with Online Status -->
+          <div class="relative flex-shrink-0">
+            <img [src]="user.profilePicture" 
+                 class="w-12 h-12 rounded-full object-cover ring-2 ring-white" 
+                 alt="{{user.fullName}} Profile">
+            
+            @if(user.isOnline) {
+              <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            } @else {
+              <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-gray-300 rounded-full border-2 border-white"></div>
+            }
+          </div>
+          
+          <!-- User Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-medium text-gray-900 truncate">
+                {{user.fullName | titlecase}}
+              </h4>
+              @if(user.unreadCount && user.unreadCount > 0) {
+                <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                  {{user.unreadCount > 99 ? '99+' : user.unreadCount}}
+                </span>
+              }
+            </div>
+            
+            <div class="flex items-center space-x-2 mt-1">
+              @if(user.isTyping) {
+                <app-typing-indicator />
+                <span class="text-xs text-blue-600 font-medium">typing...</span>
+              } @else if(user.unreadCount && user.unreadCount > 0) {
+                <span class="text-xs text-blue-600 font-medium">
+                  {{user.unreadCount}} new message{{user.unreadCount > 1 ? 's' : ''}}
+                </span>
+              } @else {
+                <span class="text-xs text-gray-500">
+                  @if(user.isOnline) {
+                    Active now
+                  } @else {
+                    Last seen recently
+                  }
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      
+      @empty {
+        <div class="flex flex-col items-center justify-center py-8 text-center">
+          <mat-icon class="text-4xl text-gray-300 mb-2">people_outline</mat-icon>
+          <h3 class="text-sm font-medium text-gray-900 mb-1">No conversations yet</h3>
+          <p class="text-xs text-gray-500">Start a conversation with someone</p>
+        </div>
+      }
+    </div>
+  </div>
 </div>
