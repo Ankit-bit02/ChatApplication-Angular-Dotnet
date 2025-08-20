@@ -9,11 +9,12 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiResponse } from '../models/api-response';
+import { ButtonComponent } from "../components/button/button.component";
 
 
 @Component({
   selector: 'app-register',
-  imports: [MatFormFieldModule, FormsModule, MatButtonModule, MatInputModule, MatIconModule, RouterLink],
+  imports: [MatFormFieldModule, FormsModule, MatButtonModule, MatInputModule, MatIconModule, RouterLink, ButtonComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -37,6 +38,7 @@ export class RegisterComponent {
   }
 
   register(){
+    this.authService.isLoading.set(true);
     let formData = new FormData();
     formData.append('email', this.email);
     formData.append('fullName', this.fullName);
@@ -46,14 +48,19 @@ export class RegisterComponent {
 
     this.authService.register(formData).subscribe({
       next: () =>{
-        this.snackBar.open('User registered successfully', 'Close');
+        this.snackBar.open('User registered successfully', 'Close', {
+          duration: 500,
+        });
+        this.authService.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
         let err = error.error as ApiResponse<string>;
         this.snackBar.open(err.error, 'Close');
+        this.authService.isLoading.set(false);
       },
       complete: () => {
         this.router.navigate(['/']);
+        this.authService.isLoading.set(false);
       },
     });
   }

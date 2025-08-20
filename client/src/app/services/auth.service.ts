@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ApiResponse } from '../models/api-response';
 import { User } from '../models/user';
@@ -13,6 +13,7 @@ export class AuthService {
   private token = "token"; // declaring variable to store token value
 
   private httpClient = inject(HttpClient); // injecting the httpclient
+  isLoading = signal(false);
 
 
   // Register method implementation
