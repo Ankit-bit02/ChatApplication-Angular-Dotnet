@@ -50,7 +50,7 @@ export class ChatService {
           if(result == 'granted') {
             new Notification('Active Now 🟢', {
               body: user.fullName + ' is online now',
-              icon: user.profileIMage,
+              icon: user.profileImage,
             });
           }
         });
@@ -100,7 +100,7 @@ export class ChatService {
       });
     }
 
-    disConnectConnection(){  // disconnec the signalr connection safely
+    disConnectConnection(){  // disconnect the signalr connection safely
       if(this.hubConnection?.state === HubConnectionState.Connected){  // if the connection is connected
         this.hubConnection.stop().catch((error) => console.log(error)); // then safely stop the connection
       }

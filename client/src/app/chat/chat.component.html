@@ -1,29 +1,12 @@
-<!-- <app-chat-sidebar class="bg-white border-r md:hidden" />
-<div class="flex rounded-3xl h-full justify-between">
-    <app-chat-sidebar class="bg-white border-r hidden block w-1/2" />
-    <div class="w-full">
-        <app-chat-window />
-    </div>
-    <div class="bg-gray-50 border-l hidden :block w-1/2">
-        <app-chat-right-sidebar />
-    </div>
-</div> -->
-
-
-<!-- chat.component.html -->
 <div class="flex h-screen bg-gray-100">
-  <!-- Mobile sidebar (hidden on desktop) -->
   <app-chat-sidebar class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform md:hidden" />
   
-  <!-- Desktop sidebar -->
   <app-chat-sidebar class="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-sm" />
   
-  <!-- Main chat area -->
   <div class="flex-1 flex flex-col">
     <app-chat-window class="flex-1" />
   </div>
   
-  <!-- Right sidebar (hidden on smaller screens) -->
   <div class="hidden lg:flex lg:flex-col lg:w-80 bg-white border-l border-gray-200 shadow-sm">
     <app-chat-right-sidebar />
   </div>

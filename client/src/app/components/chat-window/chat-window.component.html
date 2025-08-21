@@ -1,46 +1,9 @@
-<!-- @if(chatService.currentOpenedChat()){
-    <div class="relative w-full bg=[#dfeff1] h-full">
-        <div class="chat-header flex-justify justify-between items-center border-b w-full bg-white p-4">
-            <div>
-                <span class="font-bold leading-normal">
-                    {{chatService.currentOpenedChat()?.fullName | titlecase}}
-                </span>
-                <br/>
-                <span class="text-gray-400 text-sm font-bold">
-                    {{chatService.status(chatService.currentOpenedChat()?.userName!)}}
-                </span>
-            </div>
-            <div>
-                <mat-icon class="cursor-pointer hover:text-red-500">
-                    video_call
-                </mat-icon>
-            </div>
-        </div>
-        <div>
-            <app-chat-box />
-        </div>
-        <div class="absolute flex items-center bottom-0 border-t w-full bg-white p-4">
-            <input type="text" (input)="chatService.notifyTyping()" (keydown.enter)="sendMessage()" [(ngModel)]="message" class="w-full bg-gray-200 focus:outline-none text-gray-900 border rounded-full px-6 p2" placeholder="Type message..." />
-            <mat-icon (click)="sendMessage()" class="ml-5 cursor-pointer hover:text-blue-900">
-                send
-            </mat-icon>
-        </div>
-    </div>
-}                   
-@else {
-    <div class="flex flex-col items-center justify-center p-4 h-full">
-        <img src="chatopen.svg" />
-    </div>
-}    -->
-
-
-<!-- chat-window.component.html -->
 @if(chatService.currentOpenedChat()) {
   <div class="flex flex-col h-full bg-white">
     <!-- Chat Header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-white shadow-sm">
       <div class="flex items-center space-x-3">
-        <img [src]="chatService.currentOpenedChat()?.profilePicture" 
+        <img [src]="chatService.currentOpenedChat()?.profileImage" 
              class="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200"
              alt="{{chatService.currentOpenedChat()?.fullName}} Profile">
         <div>
@@ -73,7 +36,7 @@
     </div>
     
     <!-- Message Input -->
-    <div class="p-4 bg-white border-t border-gray-200">
+    <div class="placeholder-gray-400 bg-white border-t border-gray-200">
       <div class="flex items-center space-x-3">
         <div class="flex-1 relative">
           <input type="text" 

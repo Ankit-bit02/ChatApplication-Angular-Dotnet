@@ -10,11 +10,12 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiResponse } from '../models/api-response';
 import { ButtonComponent } from "../components/button/button.component";
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-register',
-  imports: [MatFormFieldModule, FormsModule, MatButtonModule, MatInputModule, MatIconModule, RouterLink, ButtonComponent],
+  imports: [MatFormFieldModule, FormsModule, MatButtonModule, MatInputModule, MatIconModule, RouterLink, ButtonComponent, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

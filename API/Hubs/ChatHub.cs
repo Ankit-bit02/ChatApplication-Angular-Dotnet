@@ -34,7 +34,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
             {
                 ConnectionId = connectionId,
                 UserName = userName,
-                ProfileImage = currentUser!.ProfileIMage,
+                ProfileImage = currentUser!.ProfileImage,
                 FullName = currentUser.FullName
             };
 
@@ -60,7 +60,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
             Id = u.Id,
             UserName = u.UserName,
             FullName = u.FullName,
-            ProfileImage = u.ProfileIMage,
+            ProfileImage = u.ProfileImage,
             IsOnline = onlineUsersSet.Contains(u.UserName!),
             UnreadCount = context.Messages.Count(x => x.ReceiverId == userName && x.SenderId == u.Id && !x.IsRead)
         }).OrderByDescending(u => u.IsOnline)
@@ -102,7 +102,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
 
         if (connectionId != null)
         {
-            await Clients.Client(connectionId).SendAsync("NotifyTypingUser", senderUserName);
+            await Clients.Client(connectionId).SendAsync("NotifyTypingToUser", senderUserName);
         }
     }
 
@@ -115,7 +115,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
 
     public async Task LoadMessages(string recipientId, int pageNumber = 1)
     {
-        int pageSize = 10;
+        int pageSize = 8;
         var userName = Context.User!.Identity!.Name;
         var currentUser = await userManager.FindByNameAsync(userName!);
 
@@ -150,7 +150,7 @@ public class ChatHub(UserManager<AppUser> userManager, AppDbContext context) : H
             }
 
         }
-
+        await Task.Delay(1000);
         await Clients.User(currentUser.Id)
         .SendAsync("ReceiveMessageList", messages);
     }

@@ -1,23 +1,3 @@
-<!-- @if(chatService.currentOpenedChat()){
-    <div class="p-3">
-    <div class="flex flex-col text-center items-center mt-3">
-        <img class="rounded-full mb-4 w-44 h-44 object-cover" [src]="chatService.currentOpenedChat()?.profilePicture" alt="Profile Picture" />
-        <div class="ml-3">
-            <p class="text-lg font-semibold">
-                {{chatService.currentOpenedChat()?.fullName | titlecase}}
-            </p>
-            <p class="text-sm text-gray-500">
-                {{chatService.currentOpenedChat()?.userName}}
-            </p>
-        </div>
-    </div>
-</div>
-} -->
-
-
-
-
-<!-- chat-right-sidebar.component.html -->
 @if(chatService.currentOpenedChat()) {
   <div class="flex flex-col h-full bg-white">
     
@@ -25,7 +5,7 @@
     <div class="flex flex-col items-center p-6 border-b border-gray-200 bg-gradient-to-b from-blue-50 to-white">
       <div class="relative mb-4">
         <img class="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg" 
-             [src]="chatService.currentOpenedChat()?.profilePicture" 
+             [src]="chatService.currentOpenedChat()?.profileImage" 
              alt="{{chatService.currentOpenedChat()?.fullName}} Profile Picture" />
         
         @if(chatService.currentOpenedChat()?.isOnline) {

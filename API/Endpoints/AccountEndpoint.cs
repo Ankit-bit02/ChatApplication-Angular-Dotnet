@@ -40,7 +40,7 @@ public static class AccountEndpoint
                 Email = email,
                 FullName = fullName,
                 UserName = userName,
-                ProfileIMage = picture
+                ProfileImage = picture
             };
 
             var result = await userManager.CreateAsync(user, password);

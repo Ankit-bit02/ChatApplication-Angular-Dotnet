@@ -1,81 +1,162 @@
-<form #userForm="ngForm" (ngSubmit)="register()" class="md:flex justify-center px-10 md:px-20 bg-white gap-10">
-    <div class="h-auto w-3/5" style="background-image: url('register.svg'); background-repeat: no-repeat; background-size: contain; background-color: white; background-position: bottom;">
-        
-    </div>
-    <div class="bg-white my-10 rounded md:w-1/4 flex flex-col gap-3 shodow-sm drop-shadow-md">
-        <div class="text-center">
-            <div class="flex justify-center">
-                <img [src]="profilePicture" class="rounded-full object-cover bg-blue-800 h-24 w-24" />
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-6xl">
+        <form #userForm="ngForm" (ngSubmit)="register()" class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+            <!-- Left Side -->
+            <div class="hidden lg:flex flex-col items-center justify-center text-center p-8">
+                <div class="w-full max-w-md h-96 mb-8"
+                    style="background-image: url('register.svg'); background-repeat: no-repeat; background-size: contain; background-position: center;">
+                </div>
+                <div class="space-y-4">
+                    <h1 class="text-4xl font-bold text-gray-900">Join Our Community</h1>
+                    <p class="text-lg text-gray-600 max-w-md">
+                        Connect with friends, share moments, and stay in touch with the people who matter most to you.
+                    </p>
+                    <div class="flex items-center justify-center space-x-6 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-sm text-gray-600">Secure & Private</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-sm text-gray-600">Always Connected</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="text-2xl my-2 font-medium">
-                Register
+
+            <!-- Right Side - Registration Form -->
+            <div class="w-full max-w-md mx-auto">
+                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 text-center">
+                        <h2 class="text-xl font-bold text-white mb-1">Create Account</h2>
+                        <p class="text-blue-100 text-sm">Start your journey with us today</p>
+                    </div>
+
+                    <!-- Profile Picture Section -->
+                    <div class="px-6 pt-6 pb-4 text-center border-b border-gray-100">
+                        <div class="relative inline-block">
+                            <img [src]="profilePicture"
+                                class="w-20 h-20 rounded-full object-cover ring-4 ring-blue-100 shadow-lg mx-auto"
+                                alt="Profile Picture" />
+                            <button type="button" (click)="pic.click()"
+                                class="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all transform hover:scale-105">
+                                <mat-icon class="text-xs">camera_alt</mat-icon>
+                            </button>
+                        </div>
+                        <input hidden (change)="onFileSelected($event)" type="file" #pic accept="image/*">
+                        <p class="text-xs text-gray-500 mt-2">Click camera to upload photo</p>
+                    </div>
+
+                    <!-- Form Fields -->
+                    <div class="px-6 py-4 space-y-3">
+
+                        <!-- Email Field -->
+                        <div class="space-y-1">
+                            <mat-form-field class="w-full no-notch">
+                                <mat-label>Email Address</mat-label>
+                                <input matInput required type="email" name="email" [(ngModel)]="email"
+                                    #emailModel="ngModel" placeholder="Enter your email" />
+                                <mat-icon matPrefix>email</mat-icon>
+
+                                <mat-error *ngIf="emailModel.errors?.['required'] && emailModel.touched">
+                                    Email is required
+                                </mat-error>
+                                <mat-error *ngIf="emailModel.errors?.['email'] && emailModel.touched">
+                                    Please enter a valid email
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+
+                        <!-- Full Name Field -->
+                        <div class="space-y-1">
+                            <mat-form-field class="w-full">
+                                <mat-label>Full Name</mat-label>
+                                <input matInput required name="fullName" [(ngModel)]="fullName" #fullNameModel="ngModel"
+                                    placeholder="Enter your full name" />
+                                <mat-icon matPrefix>person</mat-icon>
+
+                                @if(fullNameModel.errors?.['required'] && fullNameModel.touched) {
+                                <mat-error>Full name is required</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Username Field -->
+                        <div class="space-y-1">
+                            <mat-form-field class="w-full">
+                                <mat-label>Username</mat-label>
+                                <input matInput required name="userName" [(ngModel)]="userName" #userNameModel="ngModel"
+                                    placeholder="Choose a unique username" />
+                                <mat-icon matPrefix>alternate_email</mat-icon>
+
+                                @if(userNameModel.errors?.['required'] && userNameModel.touched) {
+                                <mat-error>Username is required</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="space-y-1">
+                            <mat-form-field class="w-full">
+                                <mat-label>Password</mat-label>
+                                <input matInput required [type]="hide() ? 'text' : 'password'" name="password"
+                                    [(ngModel)]="password" #passwordModel="ngModel"
+                                    placeholder="Create a strong password" />
+                                <mat-icon matPrefix>lock</mat-icon>
+                                <mat-icon matSuffix (click)="togglePassword($event)" class="cursor-pointer">
+                                    {{hide() ? 'visibility_off' : 'visibility'}}
+                                </mat-icon>
+
+                                @if(passwordModel.errors?.['required'] && passwordModel.touched) {
+                                <mat-error>Password is required</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Upload Button -->
+                        <!-- <div class="pt-1">
+                            <button type="button" (click)="pic.click()"
+                                class="w-full flex items-center justify-center space-x-2 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all group">
+                                <mat-icon class="text-gray-400 group-hover:text-blue-500">add_a_photo</mat-icon>
+                                <span class="text-sm text-gray-600 group-hover:text-blue-600 font-medium">
+                                    Upload Profile Picture
+                                </span>
+                            </button>
+                        </div> -->
+
+                        <!-- Submit Button -->
+                        <div class="pt-3">
+                            <app-button [isDisabled]="!userForm.valid" [text]="'Create Account'" (action)="register()"
+                                [isLoading]="authService.isLoading()" class="w-full" />
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center pt-3 border-t border-gray-100">
+                            <p class="text-sm text-gray-600">
+                                Already have an account?
+                                <a [routerLink]="'/login'"
+                                    class="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-all">&nbsp;
+                                    Sign in here
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Text -->
+                <div class="text-center mt-4">
+                    <p class="text-xs text-gray-500">
+                        By creating an account, you agree to our
+                        <a href="#" class="text-blue-600 hover:underline">Terms of Service</a>
+                        and
+                        <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="w-full px-4">
-            <mat-form-field class="w-full" appearance="fill">
-                <mat-label>Email</mat-label>
-                <input matInput required name="email" [(ngModel)]="email" #emailModel="ngModel" placeholder="Email" />
-
-                @if(emailModel.errors?.['required']){
-                    <mat-error>
-                        Email is required
-                    </mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field class="w-full" appearance="fill">
-                <mat-label>Full Name</mat-label>
-                <input matInput required name="fullName" [(ngModel)]="fullName" #fullNameModel="ngModel" placeholder="Full Name" />
-
-                @if(fullNameModel.errors?.['required']){
-                    <mat-error>
-                        Full name is required
-                    </mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field class="w-full" appearance="fill">
-                <mat-label>User Name</mat-label>
-                <input matInput required name="userName" [(ngModel)]="userName" #userNameModel="ngModel" placeholder="User Name" />
-
-                @if(userNameModel.errors?.['required']){
-                    <mat-error>
-                        Username is required
-                    </mat-error>
-                }
-
-            </mat-form-field>
-
-            <mat-form-field class="w-full" appearance="fill">
-                <mat-label>Password</mat-label>
-                <input matInput required [type]="hide()?'text':'password'" name="password" [(ngModel)]="password" #passwordModel="ngModel" placeholder="Password" />
-                <mat-icon (click)="togglePassword($event)" matSuffix>
-                    {{hide() ? 'visibility_off' : 'visibility' }}
-                </mat-icon>
-
-                @if(passwordModel.errors?.['required']){
-                    <mat-error>
-                        Password is required
-                    </mat-error>
-                }
-            </mat-form-field>
-
-            <input hidden (change)="onFileSelected($event)" type="file" #pic placeholder="Profile Image">
-            <button (click)="pic.click()" type="button" class="w-full flex items-center gap-2 justify-center mb-5 bg-red-900 text-white rounded-md p-2">
-                <mat-icon>add_a_photo</mat-icon>
-                <span>Upload Image</span>
-            </button>
-
-            <app-button
-                [isDisabled] ="!userForm.valid"
-                [text] = "'Register'"
-                (action)="register()"
-                [isLoading] = "authService.isLoading()"
-             />
-
-            <p class="font-bold text-xs text-center pb-10">
-                Already have an account? <a class="text-blue-500" [routerLink]="'/login'">Login Here</a>
-            </p>
-        </div>
+        </form>
     </div>
-</form>
+</div>
